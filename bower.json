@@ -1,0 +1,6 @@
+{
+  "name": "html-observer",
+  "dependencies": {
+    "zepto": "*"
+  }
+}
