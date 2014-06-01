@@ -1,6 +1,8 @@
 (function() {
   var scope;
+  var observedObjects = [];
   var lastObserverId = 0;
+  var lastObservedObjectId = 0;
   var observers = {};
   var BRACKETS_REGEX = /(\{\{[\w\.]*\}\})/g;
 
@@ -41,12 +43,52 @@
     return $('body').find('o[data-observer-id="' + id + '"]').text(text);
   }
 
-  function watch(s) {
+  function onPropertyChange(changes) {
+    var name, type, value, obj;
+
+    changes.forEach(function(change) {
+      name = change.name;
+      type = change.type;
+      value = change.object[name];
+      obj = findObservedObject(change.object);
+      debugger;
+    });
+    updateValue();
+  }
+
+  function findObservedObject(o) {
+    return observedObjects.filter(function(object) {
+      return object === o;
+    })[0];
+  }
+
+  function addObserver(object) {
+    lastObservedObjectId++;
+    object._htmlObserverId = lastObservedObjectId;
+    observedObjects.push(object);
+    Object.observe(object, onPropertyChange);
+  }
+
+  function watch(scope) {
+    var obj;
+    addObserver(scope);
+
+    for (var prop in scope) {
+      obj = scope[prop];
+
+      if (typeof obj === 'object') {
+        watch(obj);
+      }
+    }
+  }
+
+  function observe(s) {
     scope = s;
+    watch(s);
   }
 
   this.HtmlObserver = {
-    observe: watch,
+    observe: observe,
     updateValue: updateValue
   };
 }).call(window);
