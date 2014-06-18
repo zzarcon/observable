@@ -1,31 +1,56 @@
 (function() {
   var scope;
   var observedObjects = [];
+  var lastObjectId = 0;
   var lastObserverId = 0;
-  var lastObservedObjectId = 0;
+  var lastPropertyId = 0;
   var observers = {};
   var BRACKETS_REGEX = /(\{\{[\w\.]*\}\})/g;
-
-  $(document).ready(parseHtml);
 
   function parseHtml() {
     var html = $('body').html();
     var key;
+    var obj;
+    var objectId;
+    var propertyId;
 
     html = html.replace(BRACKETS_REGEX, function(match, text, offset, string) {
       key = match.replace(/{{/, '').replace('}}', '');
-      lastObserverId++;
-      observers[lastObserverId] = key;
+      obj = getObjectFromKey(key);
+      debugger;
+      if (!observers[obj]) {
+        lastObserverId++
+        observers[obj] = lastObserverId;
+      }
 
-      return '<o data-observer-id="' + lastObserverId + '">' + key + "</o>"; //Improve this
+      objectId = observers[obj];
+      obj._observerId = objectId;
+
+      return '<o data-observer-id="' + objectId + '" data-property-id="' + key + '">' + key + "</o>"; //Improve this
     });
 
     $('body').html(html);
 
     for (var key in observers) {
-      updateValue(key);
+      // uupdateValue(key);
     }
+
+    watch(scope);
   };
+
+  function getObjectFromKey(key) {
+    var keys = key.split('.');
+    var obj = scope;
+    var position;
+
+    keys.forEach(function(key, index) {
+      if (typeof obj[key] === 'object') {
+        obj = obj[key];
+      }
+    });
+
+    return obj;
+  }
 
   function updateValue(id) {
     var keys = observers[id].split('.');
@@ -63,9 +88,9 @@
   }
 
   function addObserver(object) {
-    lastObservedObjectId++;
-    object._htmlObserverId = lastObservedObjectId;
-    observedObjects.push(object);
+    // lastObservedObjectId++;
+    // object._htmlObserverId = lastObservedObjectId;
+    // observedObjects.push(object);
     Object.observe(object, onPropertyChange);
   }
 
@@ -82,9 +107,21 @@
     }
   }
 
+  function setObjectId(object) {
+    lastObjectId++;
+    object._objectId = lastObjectId;
+  }
+
   function observe(s) {
     scope = s;
-    watch(s);
+
+    for (var prop in scope) {
+      if (typeof scope[prop] === 'object') {
+        setObjectId(scope[prop]);
+      }
+    }
+
+    $(document).ready(parseHtml);
   }
 
   this.HtmlObserver = {
