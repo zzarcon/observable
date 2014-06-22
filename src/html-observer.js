@@ -17,7 +17,7 @@
     html = html.replace(BRACKETS_REGEX, function(match, text, offset, string) {
       key = match.replace(/{{/, '').replace('}}', '');
       obj = getObjectFromKey(key);
-      debugger;
+
       if (!observers[obj]) {
         lastObserverId++
         observers[obj] = lastObserverId;
@@ -108,18 +108,22 @@
   }
 
   function setObjectId(object) {
+    var obj;
+
     lastObjectId++;
     object._objectId = lastObjectId;
+
+    for (var prop in object) {
+      obj = object[prop];
+      if (typeof obj === 'object') {
+        setObjectId(obj);
+      }
+    }
   }
 
   function observe(s) {
     scope = s;
-
-    for (var prop in scope) {
-      if (typeof scope[prop] === 'object') {
-        setObjectId(scope[prop]);
-      }
-    }
+    setObjectId(scope);
 
     $(document).ready(parseHtml);
   }
