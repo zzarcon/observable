@@ -11,22 +11,15 @@
     var html = $('body').html();
     var key;
     var obj;
-    var objectId;
+    var observerId;
     var propertyId;
 
     html = html.replace(BRACKETS_REGEX, function(match, text, offset, string) {
       key = match.replace(/{{/, '').replace('}}', '');
       obj = getObjectFromKey(key);
-
-      if (!observers[obj]) {
-        lastObserverId++
-        observers[obj] = lastObserverId;
-      }
-
-      objectId = observers[obj];
-      obj._observerId = objectId;
-
-      return '<o data-observer-id="' + objectId + '" data-property-id="' + key + '">' + key + "</o>"; //Improve this
+      observerId = obj._observerId;
+      //Improve this
+      return '<o data-observer-id="' + observerId + '" data-property-id="' + key + '">' + key + "</o>";
     });
 
     $('body').html(html);
@@ -111,7 +104,7 @@
     var obj;
 
     lastObjectId++;
-    object._objectId = lastObjectId;
+    object._observerId = lastObjectId;
 
     for (var prop in object) {
       obj = object[prop];
