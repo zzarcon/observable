@@ -58,4 +58,7 @@ App.person = {
 None
 ### TODO
 - [ ] Add support for computed properties
-
+- [ ] Remove unnused code
+- [ ] Unify recursive functions
+- [ ] Render first values
+- [ ] Remove Zepto dependency
