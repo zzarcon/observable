@@ -15,7 +15,10 @@ var App = {
   version: "0.1.0",
   user: {
     firstName: "Hector",
-    lastName: "Zarco"
+    lastName: "Zarco",
+    fullName: function() {
+      return this.firstName + ' ' + this.lastName;
+    }
   },
   team: {
     league: {

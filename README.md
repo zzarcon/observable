@@ -57,6 +57,6 @@ App.person = {
 ## Dependencies
 None
 ### TODO
-- [ ] Add support for computed properties
+- [ ] Full support for computed properties
 - [ ] Improve way to store references of the object in the DOM
 - [ ] Create JSFiddle examples

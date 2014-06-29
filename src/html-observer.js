@@ -9,7 +9,7 @@
   }
 
   function parseHtml() {
-    var key, lastKey, obj, observerId, propertyId;
+    var key, lastKey, obj, value, observerId, propertyId;
     var $body = $('body');
     var html = $body.innerHTML;
 
@@ -18,8 +18,14 @@
       obj = getObjectFromKey(key);
       observerId = obj._observerId;
       lastKey = key.split('.').pop();
+      value = obj[lastKey];
+
+      if (typeof value === 'function') {
+        value = value.bind(obj)();
+      }
+
       //Improve this
-      return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + obj[lastKey] + "</o>";
+      return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + value + "</o>";
     });
 
     $body.innerHTML = html;
