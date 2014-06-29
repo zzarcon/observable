@@ -20,7 +20,7 @@
       observerId = obj._observerId;
       lastKey = key.split('.').pop();
       //Improve this
-      return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + key + "</o>";
+      return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + obj[lastKey] + "</o>";
     });
 
     $('body').html(html);
@@ -67,12 +67,12 @@
 
     lastObjectId++;
     object._observerId = lastObjectId;
+    addObserver(object);
 
     for (var prop in object) {
       obj = object[prop];
       if (typeof obj === 'object') {
         watch(obj);
-        addObserver(scope);
       }
     }
   }
