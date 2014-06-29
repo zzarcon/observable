@@ -1,18 +1,12 @@
 (function() {
   var scope;
   var lastObjectId = 0;
-  var lastObserverId = 0;
-  var lastPropertyId = 0;
-  var observers = {};
   var BRACKETS_REGEX = /(\{\{[\w\.]*\}\})/g;
 
   function parseHtml() {
-    var html = $('body').html();
-    var key;
-    var lastKey;
-    var obj;
-    var observerId;
-    var propertyId;
+    var key, lastKey, obj, observerId, propertyId;
+    var $body = $('body');
+    var html = $body.html();
 
     html = html.replace(BRACKETS_REGEX, function(match, text, offset, string) {
       key = match.replace(/{{/, '').replace('}}', '');
@@ -23,7 +17,7 @@
       return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + obj[lastKey] + "</o>";
     });
 
-    $('body').html(html);
+    $body.html(html);
   };
 
   function getObjectFromKey(key) {
@@ -53,6 +47,7 @@
     });
   }
 
+  //TODO Improve this for update value in inputs
   function updateObject(observerId, key, value) {
     var $el = $('o[data-observer-id="' + observerId + '"][data-property-key="' + key + '"]');
     $el.text(value);
