@@ -58,6 +58,5 @@ App.person = {
 None
 ### TODO
 - [ ] Add support for computed properties
-- [ ] Remove Zepto dependency
 - [ ] Improve way to store references of the object in the DOM
 - [ ] Create JSFiddle examples

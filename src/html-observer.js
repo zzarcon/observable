@@ -2,11 +2,16 @@
   var scope;
   var lastObjectId = 0;
   var BRACKETS_REGEX = /(\{\{[\w\.]*\}\})/g;
+  // var $ = document.querySelectorAll.bind(document);
+
+  function $(selector) {
+    return document.querySelectorAll(selector)[0];
+  }
 
   function parseHtml() {
     var key, lastKey, obj, observerId, propertyId;
     var $body = $('body');
-    var html = $body.html();
+    var html = $body.innerHTML;
 
     html = html.replace(BRACKETS_REGEX, function(match, text, offset, string) {
       key = match.replace(/{{/, '').replace('}}', '');
@@ -17,7 +22,7 @@
       return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + obj[lastKey] + "</o>";
     });
 
-    $body.html(html);
+    $body.innerHTML = html;
   };
 
   function getObjectFromKey(key) {
@@ -50,7 +55,7 @@
   //TODO Improve this for update value in inputs
   function updateObject(observerId, key, value) {
     var $el = $('o[data-observer-id="' + observerId + '"][data-property-key="' + key + '"]');
-    $el.text(value);
+    $el.innerHTML = value;
   }
 
   function addObserver(object) {
@@ -72,11 +77,15 @@
     }
   }
 
+  function onWindowLoad() {
+    parseHtml();
+  }
+
   function observe(s) {
     scope = s;
     watch(scope);
 
-    $(document).ready(parseHtml);
+    window.onload = onWindowLoad;
   }
 
   this.HtmlObserver = {

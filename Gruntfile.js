@@ -36,5 +36,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
 
   grunt.registerTask('compile', ['concat']);
-  grunt.registerTask('default', ['connect:app', 'compile', 'watch']);
+  grunt.registerTask('default', ['connect:app', 'watch']);
 };
