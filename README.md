@@ -53,7 +53,8 @@ App.person = {
   }
 };
 ```
-
+## Live examples
+-Basic example of one way binding http://jsfiddle.net/zzarcon/kX2UB/2/:
 ## Dependencies
 None
 ### TODO
@@ -63,3 +64,4 @@ None
 - [ ] Manage all type of changes
 - [ ] Add support for inputs
 - [ ] Two way binding
+- [ ] Use window.addEventListener("load")
