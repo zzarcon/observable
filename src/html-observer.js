@@ -2,6 +2,8 @@
   var scope;
   var lastObjectId = 0;
   var BRACKETS_REGEX = /(\{\{[\w\.]*\}\})/g;
+  var ID_ATTR = "data-observer-id";
+  var KEY_ATTR = "data-property-key";
 
   function $(selector, returnAll) {
     var $elements = document.querySelectorAll(selector);
@@ -25,7 +27,7 @@
       }
 
       //Improve this
-      return '<o data-observer-id="' + observerId + '" data-property-key="' + lastKey + '">' + value + "</o>";
+      return '<o ' + ID_ATTR + '="' + observerId + '" ' + KEY_ATTR + '="' + lastKey + '">' + value + "</o>";
     });
 
     $body.innerHTML = html;
@@ -36,6 +38,7 @@
 
     for (var i = 0; i < $formElements.length; i++) {
       $el = $formElements[i];
+      $el.addEventListener('keyup', keypressHandler);
       key = $el.getAttribute('observes');
       obj = getObjectFromKey(key);
       observerId = obj._observerId;
@@ -47,12 +50,15 @@
       }
 
       $el.removeAttribute('observes');
-      $el.setAttribute("data-observer-id", observerId);
-      $el.setAttribute("data-property-key", lastKey);
+      $el.setAttribute(ID_ATTR, observerId);
+      $el.setAttribute(KEY_ATTR, lastKey);
       $el.value = value;
     }
   };
 
+  function getObjectFromId(id) {
+
+  }
   /**
    * Return the owner object of the passed key path
    * Example key: app.user.firstName return: user
@@ -71,6 +77,14 @@
     });
 
     return obj;
+  }
+
+  function keypressHandler() {
+    var id = this.getAttribute(ID_ATTR);
+    var prop = this.getAttribute(KEY_ATTR);
+    var obj = getObjectFromId(id);
+
+    obj[prop] = this.value;
   }
 
   /**
@@ -92,7 +106,7 @@
 
   //TODO Improve this for update value in inputs
   function updateObject(observerId, key, value) {
-    var $el = $('[data-observer-id="' + observerId + '"][data-property-key="' + key + '"]');
+    var $el = $('[' + ID_ATTR + '="' + observerId + '"][' + KEY_ATTR + '="' + key + '"]');
     $el.innerHTML = value;
   }
 
@@ -123,7 +137,7 @@
     scope = s;
     watch(scope);
 
-    window.onload = onWindowLoad;
+    window.addEventListener("load", onWindowLoad);
   }
 
   this.HtmlObserver = {
