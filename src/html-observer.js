@@ -1,5 +1,6 @@
 (function() {
   var scope;
+  var store = {};
   var lastObjectId = 0;
   var BRACKETS_REGEX = /(\{\{[\w\.]*\}\})/g;
   var ID_ATTR = "data-observer-id";
@@ -57,7 +58,7 @@
   };
 
   function getObjectFromId(id) {
-
+    return store[id];
   }
   /**
    * Return the owner object of the passed key path
@@ -104,10 +105,20 @@
     });
   }
 
-  //TODO Improve this for update value in inputs
   function updateObject(observerId, key, value) {
-    var $el = $('[' + ID_ATTR + '="' + observerId + '"][' + KEY_ATTR + '="' + key + '"]');
-    $el.innerHTML = value;
+    var $el;
+    var elements = $('[' + ID_ATTR + '="' + observerId + '"][' + KEY_ATTR + '="' + key + '"]', true);
+
+    for (var i = 0; i < elements.length; i++) {
+      $el = elements[i];
+
+      //Input type
+      if ($el.tagName === "O") {
+        $el.innerHTML = value;
+      } else {
+        $el.value = value;
+      }
+    }
   }
 
   function addObserver(object) {
@@ -119,6 +130,7 @@
 
     lastObjectId++;
     object._observerId = lastObjectId;
+    store[lastObjectId] = object;
     addObserver(object);
 
     for (var prop in object) {

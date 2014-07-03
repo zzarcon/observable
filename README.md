@@ -62,6 +62,3 @@ None
 - [ ] Improve way to store references of the object in the DOM
 - [ ] Create JSFiddle examples
 - [ ] Manage all type of changes
-- [ ] Add support for inputs
-- [ ] Two way binding
-- [ ] Use window.addEventListener("load")
